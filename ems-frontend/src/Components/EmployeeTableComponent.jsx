@@ -1,0 +1,82 @@
+import React, { useEffect, useState } from "react";
+import { listEmployees,deleteEmployee } from "../Services/EmployeeService";
+import { useNavigate,useParams } from "react-router-dom";
+
+const EmployeeTableComponent = () =>{
+
+    const[employees, setEmployee] = useState([])
+    const navigator = useNavigate();
+    // const { employeeId } = useParams();
+
+
+    useEffect(() => {
+        getAllEmployees();
+    },[])
+
+    function getAllEmployees(){
+        listEmployees().then(
+        (response) =>{
+            setEmployee(response.data);
+        }
+    ).catch(error => {
+            console.error(error);
+        })
+    }
+
+    function addNewEmployee() {
+        navigator('/add-employee')
+    }
+
+    function updateEmployee(id){
+        navigator(`/update-employee/${id}`)
+    }
+
+    function removeEmployee(id){
+        deleteEmployee(id).then((response)=>{
+            console.log(response.data);
+            getAllEmployees();
+        }
+        ).catch(error => {
+            console.log(error);
+        })
+    }
+
+    return(
+        <div className='container'>
+            <h2> List of Employees </h2>
+
+            <button className='btn btn-primary mb-2' onClick={addNewEmployee}>Add Employee</button>
+
+            <table className='table table-striped table-bordered'>
+                <thead>
+                    <tr>
+                        <th>Employee ID</th>
+                        <th>Firstname</th>
+                        <th>Lastname</th>
+                        <th>Email</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {
+                    employees.map(employee => 
+                    <tr key= {employee.Id}>
+                       <td>{employee.Id}</td> 
+                       <td>{employee.firstName}</td> 
+                       <td>{employee.lastName}</td> 
+                       <td>{employee.email}</td>
+                       <td>
+                        <button className='btn btn-info' onClick={() =>updateEmployee(employee.Id)}>Update</button>
+                        
+                        <button className='btn btn-danger' onClick={() =>removeEmployee(employee.Id)}
+                            style = {{marginLeft: '10px'}}>Delete</button>
+                       </td>
+                    </tr>)
+                    }
+                </tbody>
+            </table>
+        </div>
+    )
+}
+
+export default EmployeeTableComponent
