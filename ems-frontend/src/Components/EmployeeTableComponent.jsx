@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { listEmployees,deleteEmployee } from "../Services/EmployeeService";
-import { useNavigate,useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const EmployeeTableComponent = () =>{
 
     const[employees, setEmployee] = useState([])
     const navigator = useNavigate();
-    // const { employeeId } = useParams();
-
 
     useEffect(() => {
         getAllEmployees();
